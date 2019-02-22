@@ -83,6 +83,9 @@ class AbstractImage(CollectionMember, index.Indexed, models.Model):
     # A SHA-1 hash of the file contents
     file_hash = models.CharField(max_length=40, blank=True, editable=False)
 
+    # To hold the current rotation angle of the image
+    angle = models.IntegerField(null=True, blank=True, default=0)
+
     objects = ImageQuerySet.as_manager()
 
     def is_stored_locally(self):

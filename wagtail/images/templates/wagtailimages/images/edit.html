@@ -18,6 +18,30 @@
             $('#id_tags').tagit({
                 autocomplete: {source: "{{ autocomplete_url|addslashes }}"}
             });
+
+            // rotaiton image set of code here
+            var FIXE_ROTATION_ANGLE = 90;
+            const OBJ_SELECTOR = '.jcrop-holder img';
+            var init_angle = 0
+            $('#rotate_left').click(function(event){
+                event.preventDefault();
+                // calculate new angle by removing 90 deg to it, whatever value it actually hold
+                init_angle = init_angle == -270 ? 0 : init_angle - FIXE_ROTATION_ANGLE
+
+                $(OBJ_SELECTOR).rotate(init_angle);
+                $('#id_angle').val(init_angle); // save the value into the form
+            });
+
+            $('#rotate_right').click(function(event){
+                event.preventDefault();
+
+                // calculate new angle by adding 90 deg to it, should alterate the init_angle since
+                // it is a global val
+                init_angle = init_angle == 270 ?  0 : init_angle + FIXE_ROTATION_ANGLE
+
+                $(OBJ_SELECTOR).rotate(init_angle); 
+                $('#id_angle').val(init_angle); // save the value
+            });
         });
     </script>
 
@@ -25,6 +49,9 @@
     <script src="{% static 'wagtailadmin/js/vendor/jquery.ba-throttle-debounce.min.js' %}"></script>
     <script src="{% static 'wagtailimages/js/vendor/jquery.Jcrop.min.js' %}"></script>
     <script src="{% static 'wagtailimages/js/focal-point-chooser.js' %}"></script>
+
+    <!-- JQuery image rotation lib -->
+    <script type="text/javascript" src="http://cdn.sobekrepository.org/includes/jquery-rotate/2.2/jquery-rotate.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -97,6 +124,10 @@
                                 </dd>
                             {% endif %}
                         </dl>
+                    </div>
+                    <div class="col12">
+                        <button class="button button-primary" id="rotate_left">Rotate left</button>
+                        <button class="button button-primary" id="rotate_right" >Rotate Right</button>
                     </div>
                 </div>
             </div>
