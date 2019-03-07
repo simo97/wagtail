@@ -20,6 +20,8 @@ from wagtail.images.views.serve import generate_signature
 from wagtail.search import index as search_index
 from wagtail.utils.pagination import paginate
 
+from willow.image import Image as WImage
+
 permission_checker = PermissionPolicyChecker(permission_policy)
 
 
@@ -107,6 +109,35 @@ def edit(request, image_id):
                 image.file.seek(0)
                 image._set_file_hash(image.file.read())
                 image.file.seek(0)
+
+            # print('IMAGE HERE IN CHANGE CONTROLLER ' )
+            img = image.open_file()
+            print(original_file.path)
+            
+            #img_file = open(image.file.path, 'rb')
+            # _i = image.file.read()
+            #img_obj = PL_IMG.open(img_file)
+            ang = 0
+            if 'angle' in request.POST:
+                # ensure the angle is in the post data
+                angle = request.POST['angle']
+                img = open(original_file.path, 'rb')
+                img = WImage.open(img)
+                img.rotate(int(angle))
+                file_ext = original_file.path.split('.')[-1]
+                file_ext = file_ext.lower()
+
+                # save the image here in a good extension
+                with open(original_file.path, 'wb') as out:
+                    if file_ext == 'jpg' or file_ext == 'jpeg':
+                        img.save_as_jpeg(out)
+                    elif file_ext == 'png':
+                        img.save_as_png(out)
+                    elif file_ext == 'gif':
+                        img.save_as_gif(out)
+                    
+
+            # image.file = img_obj.rotate(ang)
 
             form.save()
 
